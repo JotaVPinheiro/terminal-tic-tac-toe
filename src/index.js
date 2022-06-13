@@ -31,7 +31,10 @@ const printBoard = (board, DontShowPositions) => {
   }
 };
 
-const askMove = () => process.stdout.write("Escolha uma posição: ");
+const askMove = (board) => {
+  printBoard(board);
+  process.stdout.write("Escolha uma posição: ");
+};
 
 const endGame = (message) => {
   console.log("");
@@ -44,8 +47,7 @@ process.stdin.on("data", (data) => {
 
   if (move === NaN || move < 0 || move > 8) {
     console.log(colors.bold("\nMovimento inválido!\n"));
-    printBoard(board);
-    askMove();
+    askMove(board);
     return;
   }
 
@@ -56,8 +58,7 @@ process.stdin.on("data", (data) => {
 
   if (moves.length < board.length) {
     console.log("");
-    printBoard(board);
-    askMove();
+    askMove(board);
     return;
   }
 
@@ -66,5 +67,4 @@ process.stdin.on("data", (data) => {
 
 process.on("exit", endGame);
 
-printBoard(board);
-askMove();
+askMove(board);
