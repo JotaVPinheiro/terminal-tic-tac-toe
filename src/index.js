@@ -1,4 +1,5 @@
 const colors = require("ansi-colors");
+const CheckWin = require("./CheckWin");
 
 const board = ["", "", "", "", "", "", "", "", ""];
 const moves = [];
@@ -12,7 +13,10 @@ const printBoard = (board, DontShowPositions) => {
       if (j % 3 !== 2) process.stdout.write("|");
     }
 
-    if (DontShowPositions) continue;
+    if (DontShowPositions) {
+      console.log("");
+      continue;
+    }
 
     process.stdout.write("   ");
 
@@ -29,16 +33,16 @@ const printBoard = (board, DontShowPositions) => {
 
 const askMove = () => process.stdout.write("Escolha uma posição: ");
 
-const endGame = () => {
+const endGame = (message) => {
   console.log("");
   printBoard(board, true);
-  console.log("Fim de jogo!");
+  console.log(message);
 };
 
 process.stdin.on("data", (data) => {
-  const move = Number(data);
+  const move = Number(data) - 1;
 
-  if (move === NaN || move < 1 || move > 9) {
+  if (move === NaN || move < 0 || move > 8) {
     console.log(colors.bold("\nMovimento inválido!\n"));
     printBoard(board);
     askMove();
@@ -46,7 +50,9 @@ process.stdin.on("data", (data) => {
   }
 
   moves.push(move);
-  board[move - 1] = "X";
+  board[move] = "X";
+
+  if (CheckWin(moves)) process.exit("Você venceu!");
 
   if (moves.length < board.length) {
     console.log("");
@@ -55,7 +61,7 @@ process.stdin.on("data", (data) => {
     return;
   }
 
-  process.exit();
+  process.exit("Empate!");
 });
 
 process.on("exit", endGame);
