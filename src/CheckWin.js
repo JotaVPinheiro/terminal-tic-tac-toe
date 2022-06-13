@@ -30,7 +30,7 @@ const diagonalCheck = (moves) => {
   for (let i = 0; i < 2; i++) {
     let sequency = 0;
 
-    for (let j = i * 2; j <= 8 - i; j += i + 4 - i * 2) {
+    for (let j = i * 2; j <= 8 - i; j += 4 - i * 2) {
       if (moves.includes(j)) sequency++;
     }
 
