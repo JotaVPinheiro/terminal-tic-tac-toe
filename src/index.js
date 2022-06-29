@@ -45,7 +45,7 @@ const endGame = (message) => {
 process.stdin.on("data", (data) => {
   const move = Number(data) - 1;
 
-  if (move === NaN || move < 0 || move > 8) {
+  if (move === NaN || moves.includes(move) || move < 0 || move > 8) {
     console.log(colors.bold("\nMovimento inválido!\n"));
     askMove(board);
     return;
