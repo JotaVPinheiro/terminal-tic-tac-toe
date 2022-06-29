@@ -1,5 +1,6 @@
 const colors = require("ansi-colors");
 const CheckWin = require("./CheckWin");
+const COMPlay = require("./COMPlay");
 
 const board = ["", "", "", "", "", "", "", "", ""];
 const playerMoves = [];
@@ -32,15 +33,6 @@ const printBoard = (board, dontShowPositions) => {
   }
 };
 
-const comPlay = (playerMoves, comMoves) => {
-  while (true) {
-    const move = Math.floor(Math.random() * 9);
-    if (!playerMoves.includes(move) && !comMoves.includes(move)) return move;
-  }
-
-  return null;
-};
-
 const askMove = (board) => {
   printBoard(board);
   process.stdout.write("Escolha uma posição: ");
@@ -53,23 +45,30 @@ const endGame = (message) => {
 };
 
 process.stdin.on("data", (data) => {
-  const move = Number(data) - 1;
+  const playerMove = Number(data) - 1;
 
-  if (move === NaN || playerMoves.includes(move) || move < 0 || move > 8) {
+  if (
+    playerMove === NaN ||
+    board[playerMove] !== "" ||
+    playerMove < 0 ||
+    playerMove > 8
+  ) {
     console.log(colors.bold("\nMovimento inválido!\n"));
     askMove(board);
     return;
   }
 
-  playerMoves.push(move);
-  board[move] = "X";
+  playerMoves.push(playerMove);
+  board[playerMove] = "X";
 
   if (CheckWin(playerMoves)) process.exit("Você venceu!");
 
-  const comMove = comPlay(playerMoves, comMoves);
-  comMoves.push(comMove);
-  board[comMove] = "O";
-  console.log(board);
+  const comMove = COMPlay(playerMoves, comMoves);
+
+  if (comMove !== null) {
+    comMoves.push(comMove);
+    board[comMove] = "O";
+  }
 
   if (CheckWin(comMoves)) process.exit("Você perdeu!");
 
