@@ -4,16 +4,16 @@ const CheckWin = require("./CheckWin");
 const board = ["", "", "", "", "", "", "", "", ""];
 const moves = [];
 
-const printBoard = (board, DontShowPositions) => {
-  for (let i = 0; i < 3; i++) {
+const printBoard = (board, dontShowPositions) => {
+  for (let i = 2; i >= 0; i--) {
     for (let j = i * 3; j < i * 3 + 3; j++) {
-      if (i < 2) process.stdout.write(colors.underline(board[j] || " "));
+      if (i > 0) process.stdout.write(colors.underline(board[j] || " "));
       else process.stdout.write(board[j] || " ");
 
       if (j % 3 !== 2) process.stdout.write("|");
     }
 
-    if (DontShowPositions) {
+    if (dontShowPositions) {
       console.log("");
       continue;
     }
@@ -21,8 +21,8 @@ const printBoard = (board, DontShowPositions) => {
     process.stdout.write("   ");
 
     for (let j = i * 3; j < i * 3 + 3; j++) {
-      if (i < 2) process.stdout.write(colors.underline(j + 1 + "" || " "));
-      else process.stdout.write(j + 1 + "" || " ");
+      if (i > 0) process.stdout.write(colors.underline(j + 1 + ""));
+      else process.stdout.write(j + 1 + "");
 
       if (j % 3 !== 2) process.stdout.write("|");
     }
