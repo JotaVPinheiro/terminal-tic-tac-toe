@@ -65,7 +65,7 @@ const endGame = (message) => {
 const goodbye = () => {
   console.log(colors.bold("\nObrigado por jogar!\n"));
   console.log("Deixe sua estrelinha no repositório do GitHub:");
-  console.log("☆ https://github.com/JotaVPinheiro ☆");
+  console.log("☆ https://github.com/JotaVPinheiro/terminal-tic-tac-toe ☆");
 };
 
 process.stdin.on("data", (data) => {
