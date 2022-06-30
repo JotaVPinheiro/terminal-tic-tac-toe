@@ -13,11 +13,12 @@ const getPossibleMoves = (moves, moves_) => {
 const tryToWin = (movesToCheck, anotherMoves) => {
   const possibleMoves = getPossibleMoves(movesToCheck, anotherMoves);
 
-  const winMoves = possibleMoves
-    .map((x) => (CheckWin([...movesToCheck, x]) ? x : false))
-    .filter((x) => x);
+  for (let move of possibleMoves) {
+    const win = CheckWin([...movesToCheck, move]);
+    if (win !== false) return move;
+  }
 
-  return winMoves.length ? winMoves[0] : null;
+  return false;
 };
 
 const strategicMoves = {
@@ -64,9 +65,11 @@ const COMPlay = (playerMoves, comMoves) => {
   if (currentMove <= 2)
     return strategicMoves[currentMove](playerMoves, comMoves);
 
-  const winMove =
-    tryToWin(comMoves, playerMoves) || tryToWin(playerMoves, comMoves);
-  if (winMove) return winMove;
+  const comWinMove = tryToWin(comMoves, playerMoves);
+  if (comWinMove !== false) return comWinMove;
+
+  const playerWinMove = tryToWin(playerMoves, comMoves);
+  if (playerWinMove !== false) return playerWinMove;
 
   if (currentMove <= 4)
     return strategicMoves[currentMove](playerMoves, comMoves);
