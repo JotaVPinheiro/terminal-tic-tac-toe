@@ -2,9 +2,22 @@ const colors = require("ansi-colors");
 const CheckWin = require("./CheckWin");
 const COMPlay = require("./COMPlay");
 
-const board = ["", "", "", "", "", "", "", "", ""];
-const playerMoves = [];
-const comMoves = [];
+let board = ["", "", "", "", "", "", "", "", ""];
+let playerMoves = [];
+let comMoves = [];
+
+let gameEnded = false;
+
+const init = () => {
+  console.log("");
+
+  board = ["", "", "", "", "", "", "", "", ""];
+  playerMoves = [];
+  comMoves = [];
+  gameEnded = false;
+
+  askMove(board);
+};
 
 const printBoard = (board, dontShowPositions) => {
   for (let i = 2; i >= 0; i--) {
@@ -38,13 +51,38 @@ const askMove = (board) => {
   process.stdout.write("Escolha uma posição: ");
 };
 
+const askRestart = () =>
+  process.stdout.write("\nComeçar outra partida? (s/n): ");
+
 const endGame = (message) => {
+  gameEnded = true;
   console.log("");
   printBoard(board, true);
-  console.log(message);
+  console.log(colors.bold(message));
+  askRestart();
+};
+
+const goodbye = () => {
+  console.log(colors.bold("\nObrigado por jogar!\n"));
+  console.log("Deixe sua estrelinha no repositório do GitHub:");
+  console.log("☆ https://github.com/JotaVPinheiro ☆");
 };
 
 process.stdin.on("data", (data) => {
+  if (gameEnded) {
+    const answer = data.toString("utf8").trim();
+
+    if (answer == "n" || answer == "N") process.exit();
+    if (answer == "s" || answer == "S") {
+      init();
+      return;
+    }
+
+    console.log(colors.bold("\nResposta inválida!"));
+    askRestart();
+    return;
+  }
+
   const playerMove = Number(data) - 1;
 
   if (
@@ -61,7 +99,10 @@ process.stdin.on("data", (data) => {
   playerMoves.push(playerMove);
   board[playerMove] = "X";
 
-  if (CheckWin(playerMoves)) process.exit("Você venceu!");
+  if (CheckWin(playerMoves)) {
+    endGame("Você venceu!");
+    return;
+  }
 
   const comMove = COMPlay(playerMoves, comMoves);
 
@@ -70,7 +111,10 @@ process.stdin.on("data", (data) => {
     board[comMove] = "O";
   }
 
-  if (CheckWin(comMoves)) process.exit("Você perdeu!");
+  if (CheckWin(comMoves)) {
+    endGame("Você perdeu!");
+    return;
+  }
 
   if (playerMoves.length + comMoves.length < board.length) {
     console.log("");
@@ -78,9 +122,9 @@ process.stdin.on("data", (data) => {
     return;
   }
 
-  process.exit("Empate!");
+  endGame("Empate!");
 });
 
-process.on("exit", endGame);
+process.on("exit", goodbye);
 
 askMove(board);
